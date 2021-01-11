@@ -6,53 +6,37 @@ import {
   FlatList
 } from 'react-native';
 
-import GoalItem from './components/GoalItem';
-import GoalInput from './components/GoalInput';
+// import GoalItem from './components/GoalItem';
+// import GoalInput from './components/GoalInput';
+import Header from './components/Header';
+import GameScreen from './screens/GameScreen';
+import StartGameScreen from './screens/StartGameScreen';
 
 export default function App() {
-  const [courseGoals, setCourseGoals] = useState([]);
-  const [isAddMode, setIsAddMode] = useState(false);
-  
-  const addGoalHandler = goalTitle => {
-    setCourseGoals(currentGoals => [
-      ...currentGoals,
-      { id: Math.random().toString(), value: goalTitle }
-    ]);
-    setIsAddMode(false);
-  };
+    
+    const [userNumber, setUserNumber] = useState();
 
-  const removeGoalHandler = goalId => {
-    setCourseGoals(currentGoals => {
-      return currentGoals.filter((goal) => goal.id !== goalId)
-    });
-  };
+    const startGameHandler = (selectedNumber) => {
+      setUserNumber(selectedNumber);
+    };
 
-  const cancelGoalAdditionHandler = () => {
-    setIsAddMode(false);
-  };
+    let content = <StartGameScreen onStartGame={startGameHandler}/>;
 
-  return (
-    <View style={styles.screen}>
-      <Button title="Add New Goal" onPress={() => setIsAddMode(true)}/>
-      <GoalInput visible={isAddMode} onAddGoal={addGoalHandler} />
-      <FlatList
-        keyExtractor={(item, index) => item.id}
-        data={courseGoals}
-        renderItem={ itemData => 
-        <GoalItem 
-          id={itemData.item.id} 
-          title={itemData.item.value} 
-          onDelete={removeGoalHandler}
-          onCancel={cancelGoalAdditionHandler}
-        />
-      }
-      />
-    </View>
-  );
+    if(userNumber) {
+      content = <GameScreen userChoice={userNumber}/>;
+    }
+    
+    return (
+      <View style={styles.screen}>
+        <Header title="Guess a Number"/>
+        {content}
+      </View>
+    );
+
 }
 
 const styles = StyleSheet.create({
   screen: {
-    padding: 50
-  },
+    flex: 1
+  }
 });
