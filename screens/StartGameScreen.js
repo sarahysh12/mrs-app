@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import { 
-    View, 
-    Text, 
+    View,
     StyleSheet, 
     Button, 
     TouchableWithoutFeedback, 
@@ -14,6 +13,7 @@ import Input from '../components/Input';
 import NumberContainer from '../components/NumberContainer';
 import BodyText from '../components/BodyText';
 import TitleText from '../components/TitleText';
+import MainButton from '../components/MainButton';
 
 const StartGameScreen = props => {
     const [enteredValue, setEnteredValue] = useState('');
@@ -21,6 +21,7 @@ const StartGameScreen = props => {
     const [selectedNumber, setSelectedNumber] = useState();
     
     const numberInputHandler = inputText => {
+        console.log(inputText);
         //input validation - replace non numbers with space
         setEnteredValue(inputText.replace(/[^0-9]/g, ''));
     };
@@ -50,14 +51,20 @@ const StartGameScreen = props => {
     if (confirmed) {
         confirmedOutput = 
             <Card style={styles.summaryContainer}>
-                <Text>You selected</Text>;
+                <BodyText>You selected</BodyText>
                 <NumberContainer>{selectedNumber}</NumberContainer>
-                <Button title="START GAME" onPress={() => props.onStartGame(selectedNumber)}/>
+                <MainButton onPress={() => props.onStartGame(selectedNumber)}>
+                    Start Game        
+                </MainButton>
             </Card>
     }
 
     return (
-        <TouchableWithoutFeedback onPress={()=> {Keyboard.dismiss();}}>
+        <TouchableWithoutFeedback 
+            onPress={()=> {
+                Keyboard.dismiss();
+            }}
+        >
             <View style={styles.screen}>
                 <TitleText style={styles.title}>Start a New Game</TitleText>
                 <Card style={styles.inputContainer}>
@@ -70,10 +77,22 @@ const StartGameScreen = props => {
                         keyboardType="number-pad" 
                         maxLength={2}
                         onChangeText={numberInputHandler}
-                        value={enteredValue}/>
+                        value={enteredValue}
+                    />
                     <View style={styles.buttonContainer}>
-                        <View style={styles.button}><Button title="Reset" onPress={() => resetInputHandler} color={Colors.accent}/></View>
-                        <View style={styles.button}><Button title="Confirm" onPress={() => confirmInputHandler} color={Colors.primary}/></View>
+                        <View style={styles.button}>
+                            <Button title="Reset" 
+                                onPress={resetInputHandler} 
+                                color={Colors.accent}
+                            />
+                        </View>
+                        <View style={styles.button}>
+                            <Button 
+                                title="Confirm" 
+                                onPress={confirmInputHandler}
+                                color={Colors.primary}
+                            />
+                        </View>
                     </View>
                 </Card>
                 {confirmedOutput}
